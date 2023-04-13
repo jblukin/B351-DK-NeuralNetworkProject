@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerAI : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     public Sprite[] runSprites;
     public Sprite climbSprite;
     private int spriteIndex;
 
-    private new Rigidbody2D rigidbody;
+    public new Rigidbody2D rigidbody;
     private new Collider2D collider;
 
     private Collider2D[] overlaps = new Collider2D[4];
@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
         SetDirection();
     }
 
-    private void CheckCollision()
+    public void CheckCollision()
     {
         grounded = false;
         climbing = false;
@@ -68,6 +68,7 @@ public class Player : MonoBehaviour
             else if (hit.layer == LayerMask.NameToLayer("Ladder"))
             {
                 climbing = true;
+                //Physics2D.IgnoreCollision(overlaps[i], collider, !grounded);
             }
         }
     }
@@ -75,14 +76,14 @@ public class Player : MonoBehaviour
     private void SetDirection()
     {
         if (climbing) {
-            direction.y = Input.GetAxis("Vertical") * moveSpeed;
+            //direction.y = Input.GetAxis("Vertical") * moveSpeed;
         } else if (grounded && Input.GetButtonDown("Jump")) {
-            direction = Vector2.up * jumpStrength;
+            //direction = Vector2.up * jumpStrength;
         } else {
             direction += Physics2D.gravity * Time.deltaTime;
         }
 
-        direction.x = Input.GetAxis("Horizontal") * moveSpeed;
+        //direction.x = Input.GetAxis("Horizontal") * moveSpeed;
 
         // Prevent gravity from building up infinitely
         if (grounded) {
