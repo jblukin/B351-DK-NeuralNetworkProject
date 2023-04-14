@@ -30,14 +30,20 @@ public class SpeedRunAgent : Agent
         if (decision == 0) {
 
             //run right
-            if(!playerRef.climbing)
+            if(!playerRef.climbing) {
+
                 playerRef.direction.x = playerRef.moveSpeed;
+
+            }
 
         } else if (decision == 1) {
 
             //run left
-            if(!playerRef.climbing)
+            if(!playerRef.climbing) {
+
                 playerRef.direction.x = -playerRef.moveSpeed;
+
+            }
 
         } else if (decision == 2) {
 
@@ -64,18 +70,25 @@ public class SpeedRunAgent : Agent
             if(playerRef.climbing) {
 
                 playerRef.direction = new Vector2(0.0f, playerRef.moveSpeed);
-                AddReward(+1f);
 
             }
+
+            AddReward(+20f);
 
         }
 
         //AddReward((-1/Vector2.Distance(new Vector2(-5.25f, -5.25f), transform.position)));
 
-        AddReward((goalTransform.position.y - Mathf.Abs(transform.position.y))/(goalTransform.position.y-(5.25f)));
+        
 
-        // if(playerRef.rigidbody.velocity.y < 0.0f)
-        //     AddReward(-3f);
+        if(playerRef.rigidbody.velocity.y < -1.01f)
+            AddReward(-500f);
+
+
+
+        AddReward(Mathf.Abs(Mathf.Abs(GetClosestUsableLadder().position.x) - Mathf.Abs(transform.position.x - (GetClosestUsableLadder().position.x)))*2);
+
+        AddReward((goalTransform.position.y - Mathf.Abs(transform.position.y))/(goalTransform.position.y-(5.25f))*200);
 
         // else if (decision == 5) {
 
@@ -86,7 +99,6 @@ public class SpeedRunAgent : Agent
         if(this.StepCount == this.MaxStep) {
             
             
-
             EndEpisode();
 
         }
@@ -125,7 +137,7 @@ public class SpeedRunAgent : Agent
 
         foreach (Transform ladder in ladderTransforms) {
 
-            if((ladder.transform.position.y - (ladder.GetComponent<Collider2D>().bounds.size.y/2)) - transform.position.y < 0.15f) { //checks if player is within height to reach ladder
+            if((ladder.transform.position.y - (ladder.GetComponent<Collider2D>().bounds.size.y/2)) - transform.position.y < 0.4f) { //checks if player is within height to reach ladder
 
             /*(ladder.transform.position.y - (ladder.GetComponent<Collider2D>().bounds.size.y/2)) provides the lowest extent of the ladder collider, thus the lowest reachable point for player*/
                 if(closestUsableLadder is null) {
@@ -142,6 +154,8 @@ public class SpeedRunAgent : Agent
 
         }
 
+        Debug.Log(closestUsableLadder.name);
+
         return closestUsableLadder;
 
     }
@@ -150,13 +164,13 @@ public class SpeedRunAgent : Agent
 
         if(collision.transform.gameObject.layer == LayerMask.NameToLayer("Ladder")) {
 
-            AddReward(+5f);
+            AddReward(+10f);
 
         }
 
         if(collision.transform.tag == "Barrier") {
 
-            AddReward(-20f);
+            AddReward(-200f);
 
         }
 
