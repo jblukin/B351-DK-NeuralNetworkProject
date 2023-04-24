@@ -125,7 +125,8 @@ public class PlayerAI : MonoBehaviour
         if (collision.gameObject.CompareTag("Objective"))
         {
             enabled = false;
-            FindObjectOfType<GameManager>().LevelComplete();
+            FindObjectOfType<SpeedRunAgent>().AddReward(+10000f);
+            FindObjectOfType<SpeedRunAgent>().EndEpisode();
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {

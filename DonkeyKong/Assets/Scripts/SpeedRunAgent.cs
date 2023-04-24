@@ -14,9 +14,15 @@ public class SpeedRunAgent : Agent
 
     private PlayerAI playerRef;
 
+    private Vector3 priorFramePosition;
+
+    private int currentPlatform;
+
     private void Start() {
 
         playerRef = FindObjectOfType<PlayerAI>();
+
+        currentPlatform = CheckCurrentPlatform();
 
     }
     
@@ -47,6 +53,8 @@ public class SpeedRunAgent : Agent
 
         } else if (decision == 2) {
 
+            //AddReward(-50f);
+
             //jump right
             if(playerRef.grounded) {
 
@@ -55,6 +63,8 @@ public class SpeedRunAgent : Agent
             }
 
         } else if (decision == 3) {
+
+            //AddReward(-50f);
 
             //jump left
             if(playerRef.grounded) {
@@ -69,32 +79,48 @@ public class SpeedRunAgent : Agent
 
             if(playerRef.climbing) {
 
+                AddReward(+0.5f);
+
                 playerRef.direction = new Vector2(0.0f, playerRef.moveSpeed);
 
             }
 
-            AddReward(+20f);
+        }
+
+        StartCoroutine("SavePriorFrameYPosition");
+
+        //Debug.Log(priorFramePosition.y >= transform.position.y);
+
+
+        if(priorFramePosition.y >= transform.position.y) { //Loss of height penalty
+        
+            AddReward(-0.05f);
 
         }
 
-        //AddReward((-1/Vector2.Distance(new Vector2(-5.25f, -5.25f), transform.position)));
+        if((currentPlatform = CheckCurrentPlatform()) == 1)
+            /*0.05 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[0].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[0].position.x - -5.25f))/20); //Normalized x distance vector between startPos and Ladder1
+        else if((currentPlatform = CheckCurrentPlatform()) == 2)
+            /*0.05 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[1].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[1].position.x - ladderTransforms[0].position.x))/20); //Normalized x distance vector between Ladder1 and Ladder2
+        else if((currentPlatform = CheckCurrentPlatform()) == 3)
+            /*0.05 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[2].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[2].position.x - ladderTransforms[1].position.x))/20); //Normalized x distance vector between Ladder2 and Ladder3
+        else if((currentPlatform = CheckCurrentPlatform()) == 4)
+            /*0.05 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[3].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[3].position.x - ladderTransforms[2].position.x))/20); //Normalized x distance vector between Ladder3 and Ladder4
+        else if((currentPlatform = CheckCurrentPlatform()) == 5)
+            /*0.05 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[4].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[4].position.x - ladderTransforms[3].position.x))/20); //Normalized x distance vector between Ladder5 and Ladder6
+        else if((currentPlatform = CheckCurrentPlatform()) == 6)
+            /*0.05 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[5].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[5].position.x - ladderTransforms[4].position.x))/20); //Normalized x distance vector between Ladder1 and Ladder2
 
-        
+        /*0.025 Max Added Reward*/ AddReward((1 - (Mathf.Abs(goalTransform.position.y - transform.position.y) / Mathf.Abs(goalTransform.position.y - -5.25f)))/40); //The normal of the distance (in Y terms only - height) from the player to the goal
 
-        if(playerRef.rigidbody.velocity.y < -1.01f)
-            AddReward(-500f);
+        if(goalTransform.position.y <= transform.position.y || CheckCurrentPlatform() == 7) {
 
+            SetReward(+10f);
+            EndEpisode();
 
+        }
 
-        AddReward(Mathf.Abs(Mathf.Abs(GetClosestUsableLadder().position.x) - Mathf.Abs(transform.position.x - (GetClosestUsableLadder().position.x)))*2);
-
-        AddReward((goalTransform.position.y - Mathf.Abs(transform.position.y))/(goalTransform.position.y-(5.25f))*200);
-
-        // else if (decision == 5) {
-
-        //     //stand still
-
-        // }
+        AddReward(-0.05f); //Speed penalty
 
         if(this.StepCount == this.MaxStep) {
             
@@ -113,7 +139,9 @@ public class SpeedRunAgent : Agent
 
         sensor.AddObservation(goalTransform.position);
 
-        sensor.AddObservation(GetClosestUsableLadder().position);
+        //sensor.AddObservation(GetClosestUsableLadder().position);
+
+        sensor.AddObservation(currentPlatform);
 
     }
 
@@ -131,7 +159,34 @@ public class SpeedRunAgent : Agent
 
     }
 
-    private Transform GetClosestUsableLadder() {
+    private int CheckCurrentPlatform() {
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(new Vector2(transform.position.x, transform.position.y-0.5f), 0.15f);
+
+        foreach (Collider2D collider in colliders) {
+
+            if(collider.name.Equals("Platform1"))
+                return 1;
+            else if(collider.name.Equals("Platform2"))
+                return 2;
+            else if(collider.name.Equals("Platform3"))
+                return 3;
+            else if(collider.name.Equals("Platform4"))
+                return 4;
+            else if(collider.name.Equals("Platform5"))
+                return 5;
+            else if(collider.name.Equals("Platform6"))
+                return 6;
+            else if(collider.name.Equals("Platform7"))
+                return 7;
+
+        }
+
+        return currentPlatform;
+
+    }
+
+    private Transform GetClosestUsableLadder() { //Deprecated
         
         Transform closestUsableLadder = null;
 
@@ -174,6 +229,14 @@ public class SpeedRunAgent : Agent
 
         }
 
+
+    }
+
+    IEnumerator SavePriorFrameYPosition() 
+    {
+
+        yield return new WaitForEndOfFrame();
+        priorFramePosition = transform.position;
 
     }
 
