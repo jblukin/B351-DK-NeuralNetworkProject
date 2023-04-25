@@ -7,6 +7,7 @@ TagManager:
   - Objective
   - Obstacle
   - Barrier
+  - ClearedBarrel
   layers:
   - Default
   - TransparentFX
