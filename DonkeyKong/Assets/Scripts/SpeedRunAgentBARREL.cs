@@ -108,19 +108,19 @@ public class SpeedRunAgentBARREL : Agent
         }
 
         if((currentPlatform = CheckCurrentPlatform()) == 1)
-            /*0.1 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[0].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[0].position.x - -5.25f))/10); //Normalized x distance vector between startPos and Ladder1
+            /*0.25 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[0].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[0].position.x - -5.25f))/4); //Normalized x distance vector between startPos and Ladder1
         else if((currentPlatform = CheckCurrentPlatform()) == 2)
-            /*0.1 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[1].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[1].position.x - ladderTransforms[0].position.x))/10); //Normalized x distance vector between Ladder1 and Ladder2
+            /*0.25 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[1].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[1].position.x - ladderTransforms[0].position.x))/4); //Normalized x distance vector between Ladder1 and Ladder2
         else if((currentPlatform = CheckCurrentPlatform()) == 3)
-            /*0.1 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[2].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[2].position.x - ladderTransforms[1].position.x))/10); //Normalized x distance vector between Ladder2 and Ladder3
+            /*0.25 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[2].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[2].position.x - ladderTransforms[1].position.x))/4); //Normalized x distance vector between Ladder2 and Ladder3
         else if((currentPlatform = CheckCurrentPlatform()) == 4)
-            /*0.1 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[3].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[3].position.x - ladderTransforms[2].position.x))/10); //Normalized x distance vector between Ladder3 and Ladder4
+            /*0.25 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[3].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[3].position.x - ladderTransforms[2].position.x))/4); //Normalized x distance vector between Ladder3 and Ladder4
         else if((currentPlatform = CheckCurrentPlatform()) == 5)
-            /*0.1 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[4].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[4].position.x - ladderTransforms[3].position.x))/10); //Normalized x distance vector between Ladder5 and Ladder6
+            /*0.25 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[4].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[4].position.x - ladderTransforms[3].position.x))/4); //Normalized x distance vector between Ladder5 and Ladder6
         else if((currentPlatform = CheckCurrentPlatform()) == 6)
-            /*0.1 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[5].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[5].position.x - ladderTransforms[4].position.x))/10); //Normalized x distance vector between Ladder1 and Ladder2
+            /*0.25 Max Added Reward*/ AddReward((1 - Mathf.Abs(ladderTransforms[5].position.x - transform.position.x) / Mathf.Abs(ladderTransforms[5].position.x - ladderTransforms[4].position.x))/4); //Normalized x distance vector between Ladder1 and Ladder2
 
-        /*0.5 Max Added Reward*/ AddReward((1 - (Mathf.Abs(goalTransform.position.y - transform.position.y) / Mathf.Abs(goalTransform.position.y - -5.25f)))/2); //The normal of the distance (in Y terms only - height) from the player to the goal
+        /*0.5 Max Added Reward*/ AddReward((1 - (Mathf.Abs(goalTransform.position.y - transform.position.y) / Mathf.Abs(goalTransform.position.y - -5.25f)))/2f); //The normal of the distance (in Y terms only - height) from the player to the goal
 
         if(goalTransform.position.y <= transform.position.y || CheckCurrentPlatform() == 7) {
 
@@ -128,7 +128,7 @@ public class SpeedRunAgentBARREL : Agent
 
             if(speedrunTimer <= 30.0f) {
 
-                SetReward(+20f);
+                SetReward(+30f);
 
             }
 

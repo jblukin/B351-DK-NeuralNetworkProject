@@ -40,6 +40,14 @@ public class PlayerAIBARREL : MonoBehaviour
     {
         CheckCollision();
         SetDirection();
+
+        if(transform.position.y < -20f) {
+
+            gameObject.SendMessage("CallSetReward", 0.0f, SendMessageOptions.RequireReceiver);
+            gameObject.SendMessage("CallEndEpisode");
+
+        }
+
     }
 
     public void CheckCollision()
@@ -125,7 +133,7 @@ public class PlayerAIBARREL : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstacle"))
         {
 
-            gameObject.SendMessage("CallAddReward", -0.25f);
+            gameObject.SendMessage("CallAddReward", -0.15f);
             gameObject.SendMessage("CallEndEpisode");
 
         }

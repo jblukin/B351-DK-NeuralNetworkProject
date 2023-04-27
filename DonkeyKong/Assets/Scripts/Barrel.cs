@@ -50,7 +50,6 @@ public class Barrel : MonoBehaviour
 
             GameObject.FindObjectOfType<SpeedRunAgentBARREL>().CallAddReward(0.075f);
 
-             Debug.Log("OnTriggerEnter2D");
         }
 
     }
