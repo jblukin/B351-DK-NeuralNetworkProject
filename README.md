@@ -3,4 +3,4 @@
 
 Credit to Unity Technologies ML-Agents Toolkit and Library (https://github.com/Unity-Technologies/ml-agents)
 
-Please Use This Video to Install the Same ML-Agents Version we used: https://www.youtube.com/watch?v=zPFU30tbyKs
+Please use this video to install the same ML-Agents Version we used: https://www.youtube.com/watch?v=zPFU30tbyKs
